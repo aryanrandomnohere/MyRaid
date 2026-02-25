@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:postgres@localhost:5432/myraid"
+}
+
+enum TaskStatus {
+  todo
+  in_progress
+  done
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  tasks        Task[]
+}
+
+model Task {
+  id              String     @id @default(uuid())
+  title           String
+  descriptionEnc  String
+  descriptionIv   String
+  descriptionTag  String
+  status          TaskStatus @default(todo)
+  createdAt       DateTime   @default(now())
+  userId          String
+  user            User       @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+}
