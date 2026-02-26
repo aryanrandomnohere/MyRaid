@@ -3,8 +3,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
-    "build": "next build",
+https://github.com/aryanrandomnohere/MyRaid.git    "build": "prisma generate && next build",
     "start": "next start -p 3000",
+    "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio"
