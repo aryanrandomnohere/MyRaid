@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import prisma from "@/lib/db/prisma";
+import { getPrisma } from "@/lib/db/prisma";
 import { requireAuth } from "@/lib/auth";
 import { AppError } from "@/lib/utils/errors";
 import { parseBody } from "@/lib/utils/validation";
@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
     const user = await requireAuth();
     const body = await request.json();
     const { title, description, status } = parseBody(createTaskSchema, body);
+    const prisma = getPrisma();
 
     const encrypted = encryptText(description);
 
@@ -58,6 +59,7 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const user = await requireAuth();
+    const prisma = getPrisma();
 
     const searchParams = request.nextUrl.searchParams;
     const page = Math.max(Number(searchParams.get("page") || 1), 1);

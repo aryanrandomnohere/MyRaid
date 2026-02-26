@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
-import prisma from "@/lib/db/prisma";
+import { getPrisma } from "@/lib/db/prisma";
 import { AppError } from "@/lib/utils/errors";
 import { parseBody } from "@/lib/utils/validation";
 import { signToken, getCookieOptions } from "@/lib/auth";
@@ -19,6 +19,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { email, password } = parseBody(authSchema, body);
+    const prisma = getPrisma();
 
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {

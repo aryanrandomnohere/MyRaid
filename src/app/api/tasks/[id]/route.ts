@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import prisma from "@/lib/db/prisma";
+import { getPrisma } from "@/lib/db/prisma";
 import { requireAuth } from "@/lib/auth";
 import { AppError } from "@/lib/utils/errors";
 import { parseBody } from "@/lib/utils/validation";
@@ -28,6 +28,7 @@ export async function GET(
 ) {
   try {
     const user = await requireAuth();
+    const prisma = getPrisma();
 
     const task = await prisma.task.findFirst({
       where: { id: params.id, userId: user.id },
@@ -67,6 +68,7 @@ export async function PATCH(
     const user = await requireAuth();
     const body = await request.json();
     const update = parseBody(updateTaskSchema, body);
+    const prisma = getPrisma();
 
     const existing = await prisma.task.findFirst({
       where: { id: params.id, userId: user.id },
@@ -126,6 +128,7 @@ export async function DELETE(
 ) {
   try {
     const user = await requireAuth();
+    const prisma = getPrisma();
 
     const existing = await prisma.task.findFirst({
       where: { id: params.id, userId: user.id },
