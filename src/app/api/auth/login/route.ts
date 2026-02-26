@@ -5,6 +5,7 @@ import prisma from "@/lib/db/prisma";
 import { AppError } from "@/lib/utils/errors";
 import { parseBody } from "@/lib/utils/validation";
 import { signToken, getCookieOptions } from "@/lib/auth";
+import { buildErrorResponse } from "@/app/api/error-handler";
 
 const authSchema = z.object({
   email: z.string().email(),
@@ -38,27 +39,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
-    if (error instanceof AppError) {
-      return NextResponse.json(
-        {
-          error: {
-            code: error.code,
-            message: error.message,
-            ...(error.details && { details: error.details }),
-          },
-        },
-        { status: error.status },
-      );
-    }
-
-    return NextResponse.json(
-      {
-        error: {
-          code: "internal_error",
-          message: "Internal server error",
-        },
-      },
-      { status: 500 },
-    );
+    const { payload, status } = buildErrorResponse(error);
+    return NextResponse.json(payload, { status });
   }
 }

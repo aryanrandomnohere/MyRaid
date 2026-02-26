@@ -5,6 +5,7 @@ import { requireAuth } from "@/lib/auth";
 import { AppError } from "@/lib/utils/errors";
 import { parseBody } from "@/lib/utils/validation";
 import { decryptText, encryptText } from "@/lib/utils/crypto";
+import { buildErrorResponse } from "@/app/api/error-handler";
 
 const statusSchema = z.enum(["todo", "in_progress", "done"]);
 
@@ -50,28 +51,8 @@ export async function GET(
       { status: 200 },
     );
   } catch (error) {
-    if (error instanceof AppError) {
-      return NextResponse.json(
-        {
-          error: {
-            code: error.code,
-            message: error.message,
-            ...(error.details && { details: error.details }),
-          },
-        },
-        { status: error.status },
-      );
-    }
-
-    return NextResponse.json(
-      {
-        error: {
-          code: "internal_error",
-          message: "Internal server error",
-        },
-      },
-      { status: 500 },
-    );
+    const { payload, status } = buildErrorResponse(error);
+    return NextResponse.json(payload, { status });
   }
 }
 
@@ -131,28 +112,8 @@ export async function PATCH(
       { status: 200 },
     );
   } catch (error) {
-    if (error instanceof AppError) {
-      return NextResponse.json(
-        {
-          error: {
-            code: error.code,
-            message: error.message,
-            ...(error.details && { details: error.details }),
-          },
-        },
-        { status: error.status },
-      );
-    }
-
-    return NextResponse.json(
-      {
-        error: {
-          code: "internal_error",
-          message: "Internal server error",
-        },
-      },
-      { status: 500 },
-    );
+    const { payload, status } = buildErrorResponse(error);
+    return NextResponse.json(payload, { status });
   }
 }
 
@@ -175,27 +136,7 @@ export async function DELETE(
 
     return new NextResponse(null, { status: 204 });
   } catch (error) {
-    if (error instanceof AppError) {
-      return NextResponse.json(
-        {
-          error: {
-            code: error.code,
-            message: error.message,
-            ...(error.details && { details: error.details }),
-          },
-        },
-        { status: error.status },
-      );
-    }
-
-    return NextResponse.json(
-      {
-        error: {
-          code: "internal_error",
-          message: "Internal server error",
-        },
-      },
-      { status: 500 },
-    );
+    const { payload, status } = buildErrorResponse(error);
+    return NextResponse.json(payload, { status });
   }
 }
