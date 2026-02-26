@@ -7,6 +7,9 @@ import { parseBody } from "@/lib/utils/validation";
 import { signToken, getCookieOptions } from "@/lib/auth";
 import { buildErrorResponse } from "@/app/api/error-handler";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 const authSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),

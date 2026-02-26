@@ -7,6 +7,9 @@ import { parseBody } from "@/lib/utils/validation";
 import { decryptText, encryptText } from "@/lib/utils/crypto";
 import { buildErrorResponse } from "@/app/api/error-handler";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 const statusSchema = z.enum(["todo", "in_progress", "done"]);
 
 const updateTaskSchema = z
